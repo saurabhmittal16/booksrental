@@ -11,6 +11,8 @@ const bookSchema = new mongoose.Schema({
     available: Boolean,
     start: Date,
     end: Date
+}, {
+    versionKey: false
 });
 
 module.exports = mongoose.model('Book', bookSchema);

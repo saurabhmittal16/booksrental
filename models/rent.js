@@ -15,6 +15,8 @@ const rentSchema = new mongoose.Schema({
     },
     start: Date,
     end: Date
+}, {
+    versionKey: false
 });
 
 module.exports = mongoose.model('Rent', rentSchema);

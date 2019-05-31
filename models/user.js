@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     name: String,
+    email: String,
     mobile: {
         type: String,
         unique: true
@@ -16,6 +17,8 @@ const userSchema = new mongoose.Schema({
         state: String,
         zip: String
     }
+}, {
+    versionKey: false
 });
 
 module.exports = mongoose.model('User', userSchema)
