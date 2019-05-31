@@ -5,7 +5,7 @@ const app = fastify({
     ignoreTrailingSlash: true
 });
 
-const mongo_url = "mongodb://localhost:27017/booksrental";
+const mongo_url = "mongodb://localhost:27017/booksapp";
 
 // Firebase initialisation
 const admin = require("firebase-admin");
@@ -29,12 +29,12 @@ app.addHook('preHandler', async (request, reply, next) => {
         next();
     } else {
         let token = request.headers['authorization'];
-        if (token) {
+        if (!!token) {
             try {
                 const decodedToken = await admin.auth().verifyIdToken(token);
                 request.decoded = decodedToken;
-                console.log(decodedToken);
-                next();
+                // console.log(decodedToken);
+                return;
             } catch (err) {
                 console.log("Verification failed", err);
                 reply.code(401)
@@ -45,7 +45,7 @@ app.addHook('preHandler', async (request, reply, next) => {
             next(new Error("Authentication failed"));
         }
     }
-})
+});
 
 app.get('/', async (request, res) => {
     return {
