@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
     provider: String,
     name: String,
     mobile: String,
+    verified: {
+        type: Boolean,
+        default: false,
+    },
     address: {
         address: String,
         city: String,

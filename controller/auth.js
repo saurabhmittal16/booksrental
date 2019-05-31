@@ -11,6 +11,7 @@ exports.auth = async (req, res) => {
                 "code": 1,
                 "success": true,
                 "message": "Login successful",
+                "finished": existingUser.name != null
             }
         } else {
             // Sign-Up
@@ -33,6 +34,29 @@ exports.auth = async (req, res) => {
                 console.log("Failed to sign-up");
                 return res.code(500);
             }
+        }
+    } catch (err) {
+        console.log(err);
+        return res.code(500);
+    }
+}
+
+exports.finishProfile = async (req, res) => {
+    const uid = req.decoded.user_id;
+    const { name, mobile } = req.body;
+
+    try {
+        const foundUser = await User.findOne({uid: uid});
+        if (foundUser && !foundUser.name) {
+            foundUser.name = name;
+            foundUser.mobile = mobile;
+            await foundUser.save();
+            return {
+                "sucess": true
+            }
+        } else {
+            console.log('No user found');
+            return res.code(404);
         }
     } catch (err) {
         console.log(err);
