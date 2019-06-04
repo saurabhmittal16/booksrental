@@ -3,9 +3,6 @@ module.exports = {
         body: {
             type: 'object',
             properties: {
-                name: {
-                    type: 'string'
-                },
                 mobile: {
                     type: 'string',
                     pattern: '[6-9][0-9]{9}',
@@ -13,7 +10,7 @@ module.exports = {
                     maxLength: 10
                 }
             },
-            required: ['name', 'mobile']
+            required: ['mobile']
         }
     },
 }

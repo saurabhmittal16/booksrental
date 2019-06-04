@@ -11,15 +11,17 @@ exports.auth = async (req, res) => {
                 "code": 1,
                 "success": true,
                 "message": "Login successful",
-                "finished": existingUser.name != null
+                "finished": existingUser.mobile != null
             }
         } else {
             // Sign-Up
             const provider = req.decoded.firebase.sign_in_provider;
+            const name = req.body.name;
 
             const createdUser = await User.create({
                 email: req.decoded.email,
                 uid: uid,
+                name: name,
                 provider: provider
             });
             
@@ -29,6 +31,7 @@ exports.auth = async (req, res) => {
                     "code": 2,
                     "success": true,
                     "message": "Signup successful",
+                    "finished": false
                 };
             } else {
                 console.log("Failed to sign-up");
@@ -43,12 +46,11 @@ exports.auth = async (req, res) => {
 
 exports.finishProfile = async (req, res) => {
     const uid = req.decoded.user_id;
-    const { name, mobile } = req.body;
+    const { mobile } = req.body;
 
     try {
         const foundUser = await User.findOne({uid: uid});
-        if (foundUser && !foundUser.name) {
-            foundUser.name = name;
+        if (foundUser) {
             foundUser.mobile = mobile;
             await foundUser.save();
             return {
@@ -56,7 +58,7 @@ exports.finishProfile = async (req, res) => {
             }
         } else {
             console.log('No user found');
-            return res.code(404);
+            return res.code(500);
         }
     } catch (err) {
         console.log(err);

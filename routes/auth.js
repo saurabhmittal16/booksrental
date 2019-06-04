@@ -3,7 +3,7 @@ const schema = require('../schema/auth');
 
 module.exports = [
     {
-        method: 'GET',
+        method: 'POST',
         url: '/api/v1/auth',
         handler: controller.auth,
     },
