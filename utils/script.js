@@ -2,9 +2,13 @@ const Book = require('../models/book');
 const data = require('./data');
 
 const init = async () => {
-    for(let i=1; i<data.length; i++) {
-        await Book.create(data[i]);
-    }
+    const result = await Book.find();
+    result.forEach(
+        async doc => {
+            doc.available = true;
+            await doc.save();
+        }
+    )
 }
 
 const mongoose = require('mongoose');
@@ -12,9 +16,9 @@ const mongo_url = "mongodb://localhost:27017/booksapp";
 
 mongoose.connect(mongo_url, {useNewUrlParser: true, useFindAndModify: false})
     .then(
-        () => {
+        async () => {
             console.log("Connected to DB");
-            init();
+            await init();
         }
     )
     .catch(err => console.log(err.message));
