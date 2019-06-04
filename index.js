@@ -55,7 +55,7 @@ app.get('/', async (request, res) => {
 
 routes.forEach(route => app.route(route))
 
-mongoose.connect(mongo_url, {useNewUrlParser: true})
+mongoose.connect(mongo_url, {useNewUrlParser: true, useFindAndModify: false})
     .then(
         () => {
             console.log("Connected to DB");

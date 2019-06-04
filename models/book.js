@@ -21,4 +21,10 @@ const bookSchema = new mongoose.Schema({
     versionKey: false
 });
 
+bookSchema.pre('save', function(next) {
+    let book = this;
+    book.query = `${book.name}; ${book.author}; ${book.isbn}; ${book.genre}`;
+    next();
+});
+
 module.exports = mongoose.model('Book', bookSchema);

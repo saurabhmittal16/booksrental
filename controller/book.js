@@ -75,11 +75,17 @@ exports.updateBook = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const updatedBook = await Book.findOneAndUpdate({ _id: id }, req.body);
+        const updatedBook = await Book.findOneAndUpdate({ _id: id }, req.body, {
+            new: true
+        });
         console.log("Listing updated successfuly");
-        return {
-            success: true
+        if (updatedBook) {
+            await updatedBook.save();
+            return {
+                success: true
+            }
         }
+        return res.code(500);
     } catch (err) {
         console.log(err);
         return res.code(500);
