@@ -10,5 +10,10 @@ module.exports = [
         method: 'GET',
         url: '/api/v1/feed',
         handler: controller.getFeed
+    },
+    {
+        method: 'GET',
+        url: '/api/v1/feed/genre',
+        handler: controller.getFeedByGenre
     }
 ]
