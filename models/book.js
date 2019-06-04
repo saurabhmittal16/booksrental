@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const bookSchema = new mongoose.Schema({
+    uid: String,
     name: String,
     author: String,
     genre: String,
@@ -8,9 +9,14 @@ const bookSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
-    available: Boolean,
+    available: {
+        type: Boolean,
+        default: false
+    },
     start: Date,
-    end: Date
+    end: Date,
+    // Concat name, author, genre and isbn to run search using regexp
+    query: String
 }, {
     versionKey: false
 });
