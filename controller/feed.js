@@ -51,7 +51,7 @@ exports.getFeed = async (req, res) => {
             // return genre name, limit, start, size, next url and data
             return {
                 title: genre,
-                limit: 5,
+                limit: genre_limit,
                 start: 0,
                 size: data.length,
                 next: data.length < genre_limit ? null : `${url_genre}genre=${genre}&start=${genre_limit}&limit=${genre_limit}`,
