@@ -23,7 +23,7 @@ exports.getFeed = async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 5;
     
     // genre_limit -> number of results to send for each genre
-    const genre_limit = 2;
+    const genre_limit = parseInt(req.query.subsize, 10) || 5;
 
     // slice genres according to start and limit
     const requiredData = genres.slice(start, start+limit);
@@ -100,7 +100,7 @@ exports.getFeedByGenre = async (req, res) => {
             .limit(limit);
         
         return {
-            genre: genre,
+            title: genre,
             start: start,
             limit: limit,
             size: data.length,
