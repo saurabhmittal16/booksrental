@@ -13,8 +13,8 @@ async function asyncForEach(array, callback) {
 }
 
 exports.getFeed = async (req, res) => {
-    const url = '/api/v1/feed?';
-    const url_genre = '/api/v1/feed/genre?';
+    const url = '/feed?';
+    const url_genre = '/feed/genre?';
 
     // start -> starting entry for genre
     const start = parseInt(req.query.start, 10) || 0;
@@ -73,7 +73,7 @@ exports.getFeed = async (req, res) => {
 }
 
 exports.getFeedByGenre = async (req, res) => {
-    const url_genre = '/api/v1/feed/genre?';
+    const url_genre = '/feed/genre?';
 
     // start -> starting point for books
     const start = parseInt(req.query.start, 10) || 0;
