@@ -1,3 +1,4 @@
+const axios = require('axios');
 const Book = require('../models/book');
 
 exports.addBook = async (req, res) => {
@@ -48,6 +49,31 @@ exports.getBooks = async (req, res) => {
                 last: foundBooks.length < options.limit
             };
 
+    } catch (err) {
+        console.log(err);
+        return res.code(500);
+    }
+}
+
+exports.getBookByISBN = async (req, res) => {
+    const isbn = req.query.isbn;
+    if (!isbn) return null;
+
+    try {
+        let result = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
+        result = result.data;
+        if (result.totalItems) {
+            result = result.items[0].volumeInfo;
+            return {
+                name: result.title,
+                author: result.authors.join(", "),
+                genre: result.subject ? result.subject : "Others",
+                description: result.description.substring(0,500),
+                image: result.imageLinks.thumbnail,
+                isbn: isbn
+            }
+        }
+        return null;
     } catch (err) {
         console.log(err);
         return res.code(500);

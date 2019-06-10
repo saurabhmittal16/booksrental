@@ -15,6 +15,11 @@ module.exports = [
     },
     {
         method: 'GET',
+        url: '/api/v1/book/isbn',
+        handler: controller.getBookByISBN
+    },
+    {
+        method: 'GET',
         url: '/api/v1/book/:id',
         handler: controller.getBook
     },
