@@ -6,6 +6,8 @@ module.exports = {
                 name: { type: 'string' },
                 author: { type: 'string' },
                 genre: { type: 'string' },
+                description: { type: 'string' },
+                image: { type: 'string' },
                 isbn: { type: 'string' },
                 start: { 
                     type: 'string',
@@ -16,7 +18,7 @@ module.exports = {
                     format: 'date'
                 }
             },
-            required: ['name', 'author', 'genre', 'isbn', 'start', 'end']
+            required: ['name', 'author', 'genre', 'start', 'end']
         }
     }
 }
