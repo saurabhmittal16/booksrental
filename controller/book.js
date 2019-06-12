@@ -1,5 +1,8 @@
 const axios = require('axios');
 const Book = require('../models/book');
+const VBook = require('../models/verifiedBook');
+
+const url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:';
 
 exports.addBook = async (req, res) => {
     const uid = req.decoded.user_id;
@@ -57,23 +60,57 @@ exports.getBooks = async (req, res) => {
 
 exports.getBookByISBN = async (req, res) => {
     const isbn = req.query.isbn;
+
+    // if no isbn -> return null
     if (!isbn) return null;
 
     try {
-        let result = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
-        result = result.data;
-        if (result.totalItems) {
-            result = result.items[0].volumeInfo;
-            return {
-                name: result.title,
-                author: result.authors.join(", "),
-                genre: result.subject ? result.subject : "Others",
-                description: result.description.substring(0,500),
-                image: result.imageLinks.thumbnail,
-                isbn: isbn
+        // check verified books collection by isbn
+        const found = await VBook.findOne({ isbn: isbn }, { _id: 0 });
+        if (found) {
+            // if book found, return
+            console.log("Verified Book exists");
+            return found;
+        } else {
+            try {
+                // fetch book details from Books API
+                let result = await axios.get(`${url + isbn}`);
+
+                result = result.data;
+                if (result.totalItems) {
+                    result = result.items[0].volumeInfo;
+                    const data = {
+                        name: result.title,
+                        author: result.authors.join(", "),
+                        genre: result.categories ? result.categories : ["Others"],
+                        description: result.description.substring(0,500),
+                        image: result.imageLinks.thumbnail,
+                        isbn: isbn
+                    }
+                    try {
+                        // add fetched book to verified collection
+                        const createdBook = await VBook.create(data);
+
+                        // if book creation fails -> throw error
+                        if (!createdBook) {
+                            throw('Book creation failed');
+                        }
+                        console.log("Verified book created");
+                    } catch (err) {
+                        console.log(err);
+                    } finally {
+                        // return book data even if book isn't added to collection
+                        return data;
+                    }
+                } else {
+                    // if no result from API -> return null
+                    return null;
+                }
+            } catch (err) {
+                console.log(err);
+                return res.code(500);
             }
         }
-        return null;
     } catch (err) {
         console.log(err);
         return res.code(500);
