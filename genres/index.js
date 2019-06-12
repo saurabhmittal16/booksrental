@@ -1,12 +1,13 @@
 const fs = require('fs');
+const path = 'verified.json';
 
-exports.getGenres = (path) => {
+exports.getGenres = () => {
     const data = fs.readFileSync(path);
     const genres = JSON.parse(data).list;
     return genres;
 }
 
-exports.addGenre = (path, newGenre) => {
+exports.addGenre = (newGenre) => {
     const data = fs.readFileSync(path);
     const genres = JSON.parse(data).list;
 
