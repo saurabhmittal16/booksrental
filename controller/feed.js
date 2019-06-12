@@ -1,5 +1,5 @@
 const Book = require('../models/book');
-const genres = require('../genres');
+const genres = require('../genres.json').list;
 
 exports.getGenres = async (req, res) => {
     return genres;
