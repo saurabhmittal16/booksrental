@@ -2,8 +2,7 @@ const axios = require('axios');
 const Book = require('../models/book');
 const VBook = require('../models/verifiedBook');
 
-const genre = require('../genres/index');
-
+const _ = require('../genres/index');
 const url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:';
 
 exports.addBook = async (req, res) => {
@@ -92,6 +91,7 @@ exports.getBookByISBN = async (req, res) => {
                     try {
                         // add fetched book to verified collection
                         const createdBook = await VBook.create(data);
+                        _.addGenre(data.genre[0]);
 
                         // if book creation fails -> throw error
                         if (!createdBook) {
