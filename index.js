@@ -23,13 +23,16 @@ app.register(require('fastify-url-data'), (err) => {});
 
 app.addHook('preHandler', async (request, reply, next) => {
     const urlData = request.urlData();
-    // To-Do: Remove this backdoor
+    // To-Do: Remove this backdoor and 1 and 2
     if (urlData.path === '/' || request.headers['authorization'] === 'password') {
         // No checking for token
+        // 1
         request.decoded = {
             user_id: "zHkOoTGJ8mMMpA9NxNCb5Pz6HZH3"
         }
-        next();
+        // 2
+        return;
+        // next();
     } else {
         let token = request.headers['authorization'];
         if (!!token) {

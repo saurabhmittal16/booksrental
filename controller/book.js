@@ -83,7 +83,7 @@ exports.getBookByISBN = async (req, res) => {
                         name: result.title,
                         author: result.authors.join(", "),
                         genre: result.categories ? result.categories : ["Others"],
-                        description: result.description.substring(0,500),
+                        description: result.description ? result.description.substring(0,500) : result.title,
                         image: result.imageLinks.thumbnail,
                         isbn: isbn
                     }
