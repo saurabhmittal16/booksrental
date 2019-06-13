@@ -10,10 +10,13 @@ Authorization: password
 GET http://35.231.254.47:8080/api/v1/genre
 Authorization: password
 
+###
+GET http://35.231.254.47:8080/api/v1/feed/isbn/9780495913504?start=0&limit=5
+Authorization: password
+
 ### genre list
 GET http://localhost:8080/api/v1/genre
 Authorization: password
-
 
 ### create book from Books API
 GET http://localhost:8080/api/v1/book/isbn?isbn=9788131700709
