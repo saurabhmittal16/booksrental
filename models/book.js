@@ -7,10 +7,7 @@ const bookSchema = new mongoose.Schema({
     genre: [String],
     image: String,
     description: String,
-    isbn: {
-        type: String,
-        unique: true
-    },
+    isbn: String,
     available: {
         type: Boolean,
         default: true
