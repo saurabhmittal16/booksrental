@@ -1,5 +1,6 @@
-const Book = require('../models/book');
+const VBook = require('../models/verifiedBook');
 const genres = require('../genres.json').list;
+const _ = require('../genres/index');
 
 exports.getGenres = async (req, res) => {
     return genres;
@@ -13,6 +14,7 @@ async function asyncForEach(array, callback) {
 }
 
 exports.getFeed = async (req, res) => {
+    let verifiedGenres = _.getGenres();
     const url = '/feed?';
     const url_genre = '/feed/genre?';
 
@@ -26,23 +28,16 @@ exports.getFeed = async (req, res) => {
     const genre_limit = parseInt(req.query.subsize, 10) || 5;
 
     // slice genres according to start and limit
-    const requiredData = genres.slice(start, start+limit);
+    const requiredData = verifiedGenres.slice(start, start+limit);
 
     // asyncForEach -> async function for each genre required
     await asyncForEach(requiredData, async function(genre) {
         try {
 
             // data -> find books that are available and of the given genre
-            const data = await Book
+            const data = await VBook
                 .find({
                     genre: genre,
-                    available: true
-                }, {
-                    uid: 0,
-                    query: 0,
-                    start: 0,
-                    end: 0,
-                    available: 0
                 })
                 // limit the number of results
                 .limit(genre_limit);
@@ -85,16 +80,9 @@ exports.getFeedByGenre = async (req, res) => {
     const genre = req.query.genre;
 
     try {
-        const data = await Book
+        const data = await VBook
             .find({
                 genre: genre,
-                available: true
-            }, {
-                uid: 0,
-                query: 0,
-                start: 0,
-                end: 0,
-                available: 0,
             })
             .skip(start)
             .limit(limit);
