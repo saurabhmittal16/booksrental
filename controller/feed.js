@@ -1,4 +1,5 @@
 const VBook = require('../models/verifiedBook');
+const Book = require('../models/book');
 const genres = require('../genres.json').list;
 const _ = require('../genres/index');
 
@@ -99,4 +100,37 @@ exports.getFeedByGenre = async (req, res) => {
         console.log(err);
         return res.code(500);
     };
+}
+
+exports.getFeedByISBN = async (req, res) => {
+    const isbn = req.params.isbn;
+
+    if (!isbn || isbn.length < 13)
+        return null;
+
+    const url = `/feed/isbn/${isbn}?`;
+
+    const start = parseInt(req.query.start, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || 5;    
+
+    try {
+        const data = await Book
+        .find({
+            isbn: isbn
+        })
+        .skip(start)
+        .limit(limit);
+
+        return {
+            limit: limit,
+            start: start,
+            size: data.length,
+            next: data.length < limit ? null : `${url}start=${start+limit}&limit=${limit}`,
+            results: data
+        }
+
+    } catch (err) {
+        console.log(err);
+        return res.code(500);
+    }
 }
