@@ -5,7 +5,13 @@ module.exports = {
             properties: {
                 name: { type: 'string' },
                 author: { type: 'string' },
-                genre: { type: 'string' },
+                genre: { 
+                    type: 'array',
+                    items: {
+                        type: 'string'
+                    },
+                    minItems: 1
+                },
                 description: { type: 'string' },
                 image: { type: 'string' },
                 isbn: { type: 'string' },
@@ -18,7 +24,7 @@ module.exports = {
                     format: 'date'
                 }
             },
-            required: ['name', 'author', 'genre', 'start', 'end']
+            required: ['name', 'author', 'description', 'genre', 'start', 'end']
         }
     }
 }
