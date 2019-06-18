@@ -1,7 +1,7 @@
 const Book = require('../models/book');
 const VBook = require('../models/verifiedBook');
 
-const genres = require('../genres/index');
+const genres = require('../script/genre');
 const fetchData = require('../script/fetchData');
 
 exports.addBook = async (req, res) => {

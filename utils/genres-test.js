@@ -1,4 +1,4 @@
-const gens = require('../genres/index');
+const gens = require('../script/genre');
 
 console.log(gens.getGenres());
 console.log(gens.addGenre('PQR'));
