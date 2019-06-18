@@ -7,6 +7,9 @@ const bookSchema = new mongoose.Schema({
     image: String,
     description: String,
     isbn: String,
+    rating: Number,
+    reviews: Number,
+    url: String
 }, {
     versionKey: false
 });

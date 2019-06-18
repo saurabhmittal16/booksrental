@@ -1,9 +1,8 @@
-const axios = require('axios');
 const Book = require('../models/book');
 const VBook = require('../models/verifiedBook');
 
-const _ = require('../genres/index');
-const url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:';
+const genres = require('../genres/index');
+const fetchData = require('../script/fetchData');
 
 exports.addBook = async (req, res) => {
     const uid = req.decoded.user_id;
@@ -72,26 +71,20 @@ exports.getBookByISBN = async (req, res) => {
             // if book found, return
             console.log("Verified Book exists");
             return found;
-        } else {
+        } 
+        else {
             try {
-                // fetch book details from Books API
-                let result = await axios.get(`${url + isbn}`);
+                // fetch data from the APIs
+                let data = await fetchData(isbn);
+                
+                if (!data.empty) {
+                    // if APIs return data
+                    delete data.empty;
 
-                result = result.data;
-                if (result.totalItems) {
-                    result = result.items[0].volumeInfo;
-                    const data = {
-                        name: result.title,
-                        author: result.authors.join(", "),
-                        genre: result.categories ? result.categories : ["Others"],
-                        description: result.description ? result.description.substring(0,500) : result.title,
-                        image: result.imageLinks.thumbnail,
-                        isbn: isbn
-                    }
                     try {
                         // add fetched book to verified collection
                         const createdBook = await VBook.create(data);
-                        _.addGenre(data.genre[0]);
+                        genres.addGenre(data.genre[0]);
 
                         // if book creation fails -> throw error
                         if (!createdBook) {
@@ -104,10 +97,12 @@ exports.getBookByISBN = async (req, res) => {
                         // return book data even if book isn't added to collection
                         return data;
                     }
+
                 } else {
-                    // if no result from API -> return null
+                    // if no result from APIs -> return null
                     return null;
                 }
+
             } catch (err) {
                 console.log(err);
                 return res.code(500);
