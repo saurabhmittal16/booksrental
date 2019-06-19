@@ -8,6 +8,9 @@ const bookSchema = new mongoose.Schema({
     image: String,
     description: String,
     isbn: String,
+    rating: Number,
+    reviews: Number,
+    url: String,
     available: {
         type: Boolean,
         default: true

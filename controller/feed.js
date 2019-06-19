@@ -1,7 +1,7 @@
 const VBook = require('../models/verifiedBook');
 const Book = require('../models/book');
 const genres = require('../genres.json').list;
-const _ = require('../genres/index');
+const verifiedGenres = require('../script/genre');
 
 exports.getGenres = async (req, res) => {
     return genres;
@@ -15,7 +15,7 @@ async function asyncForEach(array, callback) {
 }
 
 exports.getFeed = async (req, res) => {
-    let verifiedGenres = _.getGenres();
+    let verifiedGenres = verifiedGenres.getGenres();
     const url = '/feed?';
     const url_genre = '/feed/genre?';
 

@@ -8,31 +8,24 @@ const url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:';
 const goodURL = (isbn) => `https://www.goodreads.com/book/isbn/${isbn}?key=${config.key}`
 
 const main = async (isbn) => {
+    let finalData = {
+        name: null,
+        author: null,
+        genre: null,
+        description: null,
+        image: null,
+        isbn: null,
+        rating: null,
+        reviews: null,
+        url: null,
+        empty: true
+    };
+
     try {
-        let finalData = {
-            name: null,
-            author: null,
-            genre: null,
-            description: null,
-            image: null,
-            isbn: null,
-            rating: null,
-            reviews: null,
-            url: null,
-            empty: true
-        };
-
-        // Requests to both APIs
         let googleData = await axios.get(`${url + isbn}`);
-        let goodReadsData = await axios.get(goodURL(isbn));
-        
-        // GET request -> standard response
+        // Request to Google API
         googleData = googleData.data;
-        goodReadsData = goodReadsData.data;
 
-        // parse XML to JSON
-        goodReadsData = await parseXML(goodReadsData);
-        
         // If google API has data, set finalData
         if (googleData.totalItems) {
             let result = googleData.items[0].volumeInfo;
@@ -46,28 +39,39 @@ const main = async (isbn) => {
                 empty: false
             }
         }
-
-        // If GoodReads has data only populate null fields and rating,reviews and url
-        if (goodReadsData) {
-            goodReadsData = goodReadsData.GoodreadsResponse.book;
-            finalData = {
-                name: finalData.name ? finalData.name : goodReadsData.title,
-                author: finalData.author ? finalData.author : goodReadsData.authors.author.name,
-                genre: finalData.genre ? finalData.genre : ["Good Reads"],
-                description: finalData.description ? finalData.description : goodReadsData.description,
-                image: finalData.image ? finalData.image : goodReadsData.image_url,
-                isbn: isbn,
-                rating: goodReadsData.average_rating,
-                reviews: goodReadsData.ratings_count,
-                url: goodReadsData.url
-            }
-        }
-
-        // return finalData
-        // if none API have data, returns object with null fields
-        return finalData;
     } catch (err) {
-        return new Error("Could not fetch data from ISBN");
+        console.log(err.message, "No data found from Google API");
+    } finally {
+        try {
+            let goodReadsData = await axios.get(goodURL(isbn));
+            goodReadsData = goodReadsData.data;
+    
+            // parse XML to JSON
+            goodReadsData = await parseXML(goodReadsData);
+                        
+            // If GoodReads has data only populate null fields and rating,reviews and url
+            if (goodReadsData) {
+                goodReadsData = goodReadsData.GoodreadsResponse.book;
+                finalData = {
+                    name: finalData.name ? finalData.name : goodReadsData.title,
+                    author: finalData.author ? finalData.author : goodReadsData.authors.author.name,
+                    genre: finalData.genre ? finalData.genre : ["Good Reads"],
+                    description: finalData.description ? finalData.description : goodReadsData.description,
+                    image: finalData.image ? finalData.image : goodReadsData.image_url,
+                    isbn: isbn,
+                    rating: goodReadsData.average_rating,
+                    reviews: goodReadsData.ratings_count,
+                    url: goodReadsData.url,
+                    empty: false
+                }
+            }
+        } catch (err) {
+            console.log(err.message, "No data found from GoodReads API");
+        } finally {
+            // return finalData
+            // if none API have data, returns object with null fields
+            return finalData;
+        }
     }
 }
 
