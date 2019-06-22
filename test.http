@@ -1,0 +1,46 @@
+### test add request
+POST http://localhost:8080/api/v1/request
+Authorization: password
+Content-Type: application/json
+
+{
+    "listing": "5d0a1acaa9134128a54140ab"
+}
+
+### test reject request
+POST http://localhost:8080/api/v1/request/reject
+Authorization: password
+Content-Type: application/json
+
+{
+    "id": "5d0e02035b710271c4d84e21",
+    "reason": "I don't like sharing things"
+}
+
+### test accept request
+POST http://localhost:8080/api/v1/request/accept
+Authorization: password
+Content-Type: application/json
+
+{
+    "id": "5d0e0660df813c7785127a69",
+    "details": {
+        "address": "221B Baker Street, London",
+        "mobile": "9090909090",
+        "pickup": "2019-06-22T20:20:39+05:30"
+    }
+}
+
+### test confirm request
+POST http://localhost:8080/api/v1/request/confirm
+Authorization: password
+Content-Type: application/json
+
+{
+    "id": "5d0e0660df813c7785127a69",
+    "details": {
+        "address": "221B Baker Street, New Delhi",
+        "mobile": "9191919191",
+        "delivery": "2019-06-23T20:20:39+05:30"
+    }
+}
