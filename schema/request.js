@@ -4,8 +4,10 @@ module.exports = {
             type: 'object',
             properties: {
                 listing: { type: 'string' },
+                start: { type: 'string', format: 'date' },
+                end: { type: 'string', format: 'date' }
             },
-            required: ['listing']
+            required: ['listing', 'start', 'end']
         }
     },
 

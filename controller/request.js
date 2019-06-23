@@ -3,7 +3,7 @@ const Book = require('../models/book');
 
 exports.createRequest = async (req, res) =>  {
     const uid = req.decoded.user_id;
-    const { listing } = req.body;
+    const { listing, start, end } = req.body;
 
     try {
         const foundListing = await Book.findOne({ _id: listing, available: true });
@@ -11,7 +11,13 @@ exports.createRequest = async (req, res) =>  {
         // if no listing with the id is found
         if (!foundListing) {
             return res.code(500).send({
-                message: 'No such listing found'
+                message: "No listing found"
+            });
+        }
+
+        if (new Date(start) < foundListing.start || new Date(end) > foundListing.end) {
+            return res.code(500).send({
+                message: "Start or end are wrong"
             });
         }
 
@@ -33,6 +39,8 @@ exports.createRequest = async (req, res) =>  {
             // create request with status 0
             const request = await Request.create({
                 listing: listing,
+                start: start,
+                end: end,
                 from: uid,
                 to: foundListing.uid,
                 status: 0

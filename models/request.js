@@ -7,6 +7,10 @@ const requestSchema = new mongoose.Schema({
     // Firebase UID
     to: String,
     
+    // start and end date for rent
+    start: Date,
+    end: Date,
+
     // Book listing ID
     listing: {
         type: mongoose.Schema.Types.ObjectId,
