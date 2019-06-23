@@ -177,7 +177,6 @@ exports.confirmRequest = async (req, res) => {
 }
 
 exports.rentNotifications = async (req, res) => {
-    console.log("Wann");
     const me = req.decoded.user_id;
     const url = `/notification/rent?`
 
@@ -193,8 +192,6 @@ exports.rentNotifications = async (req, res) => {
             .populate('listing')
             .skip(start)
             .limit(limit);
-
-        console.log(data);
 
         return {
             limit: limit,
