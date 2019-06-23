@@ -28,7 +28,8 @@ app.addHook('preHandler', async (request, reply, next) => {
         // No checking for token
         // 1
         request.decoded = {
-            user_id: "zHkOoTGJ8mMMpA9NxNCb5Pz6HZH3"
+            user_id: "DGQiXCbBKZhT2csShZWTjJpqR9L2"
+            // user_id: "vLqohwiQCzeYQI8FqOKLwkJoFv22"
         }
         // 2
         return;

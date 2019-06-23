@@ -13,7 +13,7 @@ Authorization: password
 Content-Type: application/json
 
 {
-    "id": "5d0e02035b710271c4d84e21",
+    "id": "5d0f56b1b29739143edb0da9",
     "reason": "I don't like sharing things"
 }
 
@@ -44,3 +44,11 @@ Content-Type: application/json
         "delivery": "2019-06-23T20:20:39+05:30"
     }
 }
+
+### rent notification
+GET http://localhost:8080/api/v1/notification/rent
+Authorization: password
+
+### lent notification
+GET http://localhost:8080/api/v1/notification/lent
+Authorization: password

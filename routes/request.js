@@ -26,4 +26,14 @@ module.exports = [
         schema: schema.confirmRequest,
         handler: controller.confirmRequest
     },
+    {
+        method: 'GET',
+        url: '/api/v1/notification/rent',
+        handler: controller.rentNotifications
+    },
+    {
+        method: 'GET',
+        url: '/api/v1/notification/lent',
+        handler: controller.lentNotification
+    }
 ]

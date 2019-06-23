@@ -148,7 +148,7 @@ exports.confirmRequest = async (req, res) => {
             foundRequest.closed = true;
             foundRequest.lendee = details;
 
-            // create a new rent entity
+            // To-Do: create a new rent entity and update listing to become unavailable
             await foundRequest.save();
 
             // also return new rent id
@@ -164,6 +164,72 @@ exports.confirmRequest = async (req, res) => {
         }
     } catch (err) {
         console.log("Could not find request");
+        return res.code(500);
+    }
+}
+
+exports.rentNotifications = async (req, res) => {
+    console.log("Wann");
+    const me = req.decoded.user_id;
+    const url = `/notification/rent?`
+
+    const start = parseInt(req.query.start, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || 5;
+
+    try {
+        const data = await Request
+            .find({
+                from: me,
+                status: 1
+            })
+            .populate('listing')
+            .skip(start)
+            .limit(limit);
+
+        console.log(data);
+
+        return {
+            limit: limit,
+            start: start,
+            size: data.length,
+            next: data.length < limit ? null : `${url}start=${start+limit}&limit=${limit}`,
+            results: data
+        }
+    } catch (err) {
+        console.log(err);
+        return res.code(500);
+    }
+}
+
+exports.lentNotification = async (req, res) => {
+    const me = req.decoded.user_id;
+    const url = `/notification/lent?`
+
+    const start = parseInt(req.query.start, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || 5;
+
+    try {
+        const data = await Request
+            .find({
+                to: me,
+                $or: [
+                    { status: 0 },
+                    { status: 2 },
+                ]
+            })
+            .populate('listing')
+            .skip(start)
+            .limit(limit);
+
+        return {
+            limit: limit,
+            start: start,
+            size: data.length,
+            next: data.length < limit ? null : `${url}start=${start+limit}&limit=${limit}`,
+            results: data
+        }
+    } catch (err) {
+        console.log(err);
         return res.code(500);
     }
 }
