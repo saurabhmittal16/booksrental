@@ -1,5 +1,6 @@
 const Request = require('../models/request');
 const Book = require('../models/book');
+const Rent = require('../models/rent');
 
 exports.createRequest = async (req, res) =>  {
     const uid = req.decoded.user_id;
@@ -26,7 +27,7 @@ exports.createRequest = async (req, res) =>  {
                 listing: listing,
                 from: uid,
                 to: foundListing.uid,
-                status: "initial",
+                status: "requested",
                 createdAt: {
                     $lt: new Date()
                 }
@@ -41,14 +42,14 @@ exports.createRequest = async (req, res) =>  {
                 }
             }
             
-            // create request with status -> "initial"
+            // create request with status -> "requested"
             const request = await Request.create({
                 listing: listing,
                 start: start,
                 end: end,
                 from: uid,
                 to: foundListing.uid,
-                status: "initial"
+                status: "requested"
             });
 
             // return request id on successful creation
@@ -72,7 +73,7 @@ exports.rejectRequest = async (req, res) => {
     const { id, reason } = req.body;
 
     try {
-        const foundRequest = await Request.findOne({ _id: id, to: me, status: "initial", closed: false });
+        const foundRequest = await Request.findOne({ _id: id, to: me, status: "requested", closed: false });
 
         // if no request found, return error
         if (!foundRequest) {
@@ -109,7 +110,7 @@ exports.acceptRequest = async (req, res) => {
     const { id, details } = req.body;
 
     try {
-        const foundRequest = await Request.findOne({ _id: id, to: me, status: "initial", closed: false });
+        const foundRequest = await Request.findOne({ _id: id, to: me, status: "requested", closed: false });
 
         // if no request found, return error
         if (!foundRequest) {
@@ -232,7 +233,7 @@ exports.lentNotification = async (req, res) => {
             .find({
                 to: me,
                 $or: [
-                    { status: "initial" },
+                    { status: "requested" },
                     { status: "confirmed" },
                 ]
             })
@@ -271,7 +272,7 @@ exports.latestNotificationInfo = async (req, res) => {
         const latestLentNotif = await Request.find({
             to: me,
             $or: [
-                { status: "initial" },
+                { status: "requested" },
                 { status: "confirmed" },
             ]
         })

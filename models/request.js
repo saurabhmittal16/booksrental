@@ -17,7 +17,7 @@ const requestSchema = new mongoose.Schema({
         ref: 'Book'
     },
 
-    // "initial", "accepted", "rejected", "confirmed"
+    // "requested", "accepted", "rejected", "confirmed"
     status: String,
 
     // request accepted or rejected

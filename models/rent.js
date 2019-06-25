@@ -1,18 +1,37 @@
 const mongoose = require('mongoose');
 
 const rentSchema = new mongoose.Schema({
-    lender: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+    // Firebase UID
+    from: String,
+
+    // Lender details
+    lenderInfo: {
+        address: String,
+        mobile: String,
+        pickup: Date
     },
-    recepient: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User' 
+    
+    // Firebase UID
+    to: String,
+
+    // Lendee details
+    lendeeInfo: {
+        address: String,
+        mobile: String,
+        delivery: Date
     },
-    book: {
+
+    // Listing ID
+    listing: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book'
     },
+    
+    closed: {
+        type: Boolean,
+        default: false
+    },
+
     start: Date,
     end: Date
 }, {
