@@ -167,22 +167,36 @@ exports.confirmRequest = async (req, res) => {
             foundRequest.closed = true;
             foundRequest.lendee = details;
 
-            // To-Do: create a new rent entity and update listing to become unavailable
-            await foundRequest.save();
+            try {
+                const newRent = await Rent.create({
+                    from: foundRequest.from,
+                    to: foundRequest.to,
+                    listing: foundRequest.listing,
+                    start: foundRequest.start,
+                    end: foundRequest.end,
+                    lenderInfo: foundRequest.lender,
+                    lendeeInfo: details,
+                    closed: false
+                });
 
-            // also return new rent id
-            return {
-                success: true,
-                message: "Request confirmed",
-                rent_id: "some-id"
+                if (newRent) {
+                    await foundRequest.save();
+                    return {
+                        success: true,
+                        message: "Request confirmed",
+                        rent_id: newRent._id
+                    }
+                }
+            } catch (err) {
+                console.log("Could not create rent", err);
+                return res.code(500);
             }
-
         } catch (err) {
-            console.log("Could not update request details");
+            console.log("Could not update request details", err);
             return res.code(500);
         }
     } catch (err) {
-        console.log("Could not find request");
+        console.log("Could not find request", err);
         return res.code(500);
     }
 }
