@@ -35,5 +35,10 @@ module.exports = [
         method: 'GET',
         url: '/api/v1/notification/lent',
         handler: controller.lentNotification
+    },
+    {
+        method: 'GET',
+        url: '/api/v1/notification/info',
+        handler: controller.latestNotificationInfo
     }
 ]

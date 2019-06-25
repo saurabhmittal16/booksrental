@@ -205,7 +205,7 @@ exports.rentNotifications = async (req, res) => {
             .populate('listing')
             .skip(start)
             .limit(limit)
-            .sort(-1);
+            .sort("-1");
 
         return {
             limit: limit,
@@ -233,13 +233,13 @@ exports.lentNotification = async (req, res) => {
                 to: me,
                 $or: [
                     { status: "initial" },
-                    { status: "rejected" },
+                    { status: "confirmed" },
                 ]
             })
             .populate('listing')
             .skip(start)
             .limit(limit)
-            .sort(-1);
+            .sort("-1");
 
         return {
             limit: limit,
@@ -248,6 +248,43 @@ exports.lentNotification = async (req, res) => {
             next: data.length < limit ? null : `${url}start=${start+limit}&limit=${limit}`,
             results: data
         }
+    } catch (err) {
+        console.log(err);
+        return res.code(500);
+    }
+}
+
+exports.latestNotificationInfo = async (req, res) => {
+    const me = req.decoded.user_id;
+
+    try {
+        const latestRentNotif = await Request.find({
+            from: me,
+            $or: [
+                { status: "accepted" },
+                { status: "rejected" },
+            ]
+        })
+        .sort("-1")
+        .limit(1);
+
+        const latestLentNotif = await Request.find({
+            to: me,
+            $or: [
+                { status: "initial" },
+                { status: "confirmed" },
+            ]
+        })
+        .sort("-1")
+        .limit(1);
+
+        console.log(latestLentNotif, latestRentNotif);
+
+        return {
+            rent: latestRentNotif[0] ? latestRentNotif[0].updatedAt : null,
+            lent: latestLentNotif[0] ? latestLentNotif[0].updatedAt : null
+        }
+        
     } catch (err) {
         console.log(err);
         return res.code(500);
