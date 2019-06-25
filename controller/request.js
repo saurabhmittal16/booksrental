@@ -278,7 +278,7 @@ exports.latestNotificationInfo = async (req, res) => {
         .sort("-1")
         .limit(1);
 
-        console.log(latestLentNotif, latestRentNotif);
+        // console.log(latestLentNotif, latestRentNotif);
 
         return {
             rent: latestRentNotif[0] ? latestRentNotif[0].updatedAt : null,
