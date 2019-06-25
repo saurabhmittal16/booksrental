@@ -17,8 +17,8 @@ const requestSchema = new mongoose.Schema({
         ref: 'Book'
     },
 
-    // 0, 1, 2
-    status: Number,
+    // "initial", "accepted", "rejected", "confirmed"
+    status: String,
 
     // request accepted or rejected
     accepted: Boolean,
@@ -44,7 +44,8 @@ const requestSchema = new mongoose.Schema({
     // if rejected, reason for rejection
     reason: String
 }, {
-    versionKey: false
+    versionKey: false,
+    timestamps: true
 });
 
 module.exports = mongoose.model('Request', requestSchema);

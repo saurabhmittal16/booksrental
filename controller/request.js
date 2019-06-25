@@ -25,9 +25,14 @@ exports.createRequest = async (req, res) =>  {
             const existingRequest = await Request.findOne({
                 listing: listing,
                 from: uid,
-                status: 0,
-                closed: false
+                to: foundListing.uid,
+                status: "initial",
+                createdAt: {
+                    $lt: new Date()
+                }
             });
+            
+            console.log(existingRequest);
 
             if (existingRequest) {
                 return {
@@ -36,14 +41,14 @@ exports.createRequest = async (req, res) =>  {
                 }
             }
             
-            // create request with status 0
+            // create request with status -> "initial"
             const request = await Request.create({
                 listing: listing,
                 start: start,
                 end: end,
                 from: uid,
                 to: foundListing.uid,
-                status: 0
+                status: "initial"
             });
 
             // return request id on successful creation
@@ -54,7 +59,7 @@ exports.createRequest = async (req, res) =>  {
             }
 
         } catch (err) {
-            console.log("Request could not be added");
+            console.log("Request could not be added", err);
             return res.code(500);
         }
     } catch (err) {
@@ -67,7 +72,7 @@ exports.rejectRequest = async (req, res) => {
     const { id, reason } = req.body;
 
     try {
-        const foundRequest = await Request.findOne({ _id: id, to: me, status: 0, closed: false });
+        const foundRequest = await Request.findOne({ _id: id, to: me, status: "initial", closed: false });
 
         // if no request found, return error
         if (!foundRequest) {
@@ -78,7 +83,7 @@ exports.rejectRequest = async (req, res) => {
 
         try {
             // update request info on rejection
-            foundRequest.status = 1;
+            foundRequest.status = "rejected";
             foundRequest.accepted = false;
             foundRequest.reason = reason;
             foundRequest.closed = true;
@@ -104,7 +109,7 @@ exports.acceptRequest = async (req, res) => {
     const { id, details } = req.body;
 
     try {
-        const foundRequest = await Request.findOne({ _id: id, to: me, status: 0, closed: false });
+        const foundRequest = await Request.findOne({ _id: id, to: me, status: "initial", closed: false });
 
         // if no request found, return error
         if (!foundRequest) {
@@ -115,7 +120,7 @@ exports.acceptRequest = async (req, res) => {
 
         try {
             // update request info on rejection
-            foundRequest.status = 1;
+            foundRequest.status = "accepted";
             foundRequest.accepted = true;
             foundRequest.lender = details;
             await foundRequest.save();
@@ -140,7 +145,12 @@ exports.confirmRequest = async (req, res) => {
     const { id, details } = req.body;
 
     try {
-        const foundRequest = await Request.findOne({ _id: id, from: me, status: 1, closed: false });
+        const foundRequest = await Request.findOne({ 
+            _id: id, 
+            from: me, 
+            status: "accepted", 
+            closed: false 
+        });
 
         // if no request found, return error
         if (!foundRequest) {
@@ -151,7 +161,7 @@ exports.confirmRequest = async (req, res) => {
 
         try {
             // update request info on rejection
-            foundRequest.status = 2;
+            foundRequest.status = "confirmed";
             foundRequest.accepted = true;
             foundRequest.closed = true;
             foundRequest.lendee = details;
@@ -187,11 +197,15 @@ exports.rentNotifications = async (req, res) => {
         const data = await Request
             .find({
                 from: me,
-                status: 1
+                $or: [
+                    { status: "accepted" },
+                    { status: "rejected" },
+                ]
             })
             .populate('listing')
             .skip(start)
-            .limit(limit);
+            .limit(limit)
+            .sort(-1);
 
         return {
             limit: limit,
@@ -218,13 +232,14 @@ exports.lentNotification = async (req, res) => {
             .find({
                 to: me,
                 $or: [
-                    { status: 0 },
-                    { status: 2 },
+                    { status: "initial" },
+                    { status: "rejected" },
                 ]
             })
             .populate('listing')
             .skip(start)
-            .limit(limit);
+            .limit(limit)
+            .sort(-1);
 
         return {
             limit: limit,
