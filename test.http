@@ -61,3 +61,11 @@ Authorization: password
 ### notification info
 GET http://localhost:8080/api/v1/notification/info
 Authorization: password
+
+### activity - rent
+GET http://localhost:8080/api/v1/activity/rent
+Authorization: password
+
+### activity - lent
+GET http://localhost:8080/api/v1/activity/lent
+Authorization: password
