@@ -103,6 +103,7 @@ exports.getFeedByGenre = async (req, res) => {
 }
 
 exports.getFeedByISBN = async (req, res) => {
+    const me = req.decoded.user_id;
     const isbn = req.params.isbn;
 
     if (!isbn || isbn.length < 13)
@@ -116,7 +117,8 @@ exports.getFeedByISBN = async (req, res) => {
     try {
         const data = await Book
         .find({
-            isbn: isbn
+            isbn: isbn,
+            uid: { $nin: [me] }
         })
         .skip(start)
         .limit(limit);

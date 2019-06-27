@@ -220,7 +220,7 @@ exports.rentNotifications = async (req, res) => {
             .populate('listing')
             .skip(start)
             .limit(limit)
-            .sort("-1");
+            .sort("-updatedAt");
 
         return {
             limit: limit,
@@ -254,7 +254,7 @@ exports.lentNotification = async (req, res) => {
             .populate('listing')
             .skip(start)
             .limit(limit)
-            .sort("-1");
+            .sort("-updatedAt");
 
         return {
             limit: limit,
@@ -280,7 +280,7 @@ exports.latestNotificationInfo = async (req, res) => {
                 { status: "rejected" },
             ]
         })
-        .sort("-1")
+        .sort("-updatedAt")
         .limit(1);
 
         const latestLentNotif = await Request.find({
@@ -290,7 +290,7 @@ exports.latestNotificationInfo = async (req, res) => {
                 { status: "confirmed" },
             ]
         })
-        .sort("-1")
+        .sort("-updatedAt")
         .limit(1);
 
         // console.log(latestLentNotif, latestRentNotif);
