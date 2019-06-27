@@ -118,6 +118,7 @@ exports.getFeedByISBN = async (req, res) => {
         const data = await Book
         .find({
             isbn: isbn,
+            available: true,
             uid: { $nin: [me] }
         })
         .skip(start)

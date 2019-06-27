@@ -168,6 +168,13 @@ exports.confirmRequest = async (req, res) => {
             foundRequest.lendee = details;
 
             try {
+                const foundListing = await Book.findOne({
+                    _id: foundRequest.listing
+                });
+
+                // To-Do: What to do if no listing found?
+                foundListing.available = false;
+
                 const newRent = await Rent.create({
                     from: foundRequest.from,
                     to: foundRequest.to,
@@ -181,6 +188,7 @@ exports.confirmRequest = async (req, res) => {
 
                 if (newRent) {
                     await foundRequest.save();
+                    await foundListing.save();
                     return {
                         success: true,
                         message: "Request confirmed",
