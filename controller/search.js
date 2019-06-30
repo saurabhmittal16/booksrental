@@ -1,16 +1,15 @@
 const Book = require('../models/book');
 
 exports.basicSearch = async (req, res) => {
-    let { query, status, page } = req.query;
+    let { query, start, limit } = req.query;
+    const url = `/search?query=${query}`
 
-    const options = {
-        page: parseInt(page, 10) || 1,
-        limit: 2
-    }
+    start = parseInt(start, 10) || 0;
+    limit = parseInt(limit, 10) || 5;
 
     try {
         // use regexp to match surveys with received search query
-        const books = await Book.find({
+        const data = await Book.find({
             query: {
                 $regex: new RegExp(query, 'i')
             },
@@ -18,15 +17,17 @@ exports.basicSearch = async (req, res) => {
             uid: 0,
             query: 0,
         })
-        .skip((options.page - 1) * options.limit)
-        .limit(options.limit);
+        .skip(start)
+        .limit(limit);
         
         return {
-            data: books,
-            page: options.page,
-            last: books.length < options.limit
-        };
-
+            query: query,
+            limit: limit,
+            start: start,
+            size: data.length,
+            next: data.length < limit ? null : `${url}&start=${start+limit}&limit=${limit}`,
+            results: data
+        }
     } catch (err) {
         console.log(err);
         return res.code(500);

@@ -33,3 +33,7 @@ Authorization: password
 ###
 GET http://localhost:8080/api/v1/feed/isbn/9780521533850
 Authorization: password
+
+### search
+GET http://localhost:8080/api/v1/search?query=compu&start=0&limit=5
+Authorization: password

@@ -50,6 +50,7 @@ exports.getFeed = async (req, res) => {
                 limit: genre_limit,
                 start: 0,
                 size: data.length,
+                // To-Do: Looks like a bug, fix
                 next: data.length < genre_limit ? null : `${url_genre}genre=${genre}&start=${genre_limit}&limit=${genre_limit}`,
                 results: data
             }
