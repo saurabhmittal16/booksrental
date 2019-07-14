@@ -4,6 +4,7 @@ const searchRoutes = require('./search');
 const feedRoutes = require('./feed');
 const requestRoutes = require('./request');
 const rentRoutes = require('./rent');
+const adminRoutes = require('./admin');
 
 module.exports = [].concat(
     authRoutes,
@@ -11,5 +12,6 @@ module.exports = [].concat(
     searchRoutes,
     feedRoutes,
     requestRoutes,
-    rentRoutes
+    rentRoutes,
+    adminRoutes
 );

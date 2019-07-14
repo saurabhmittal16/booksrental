@@ -6,6 +6,7 @@ const app = fastify({
 });
 
 const mongo_url = "mongodb://localhost:27017/booksapp";
+const config = require('./config');
 
 // Firebase initialisation
 const admin = require("firebase-admin");
@@ -24,7 +25,12 @@ app.register(require('fastify-url-data'), (err) => {});
 app.addHook('preHandler', async (request, reply, next) => {
     const urlData = request.urlData();
     // To-Do: Remove this backdoor and 1 and 2
-    if (urlData.path === '/' || request.headers['authorization'] === 'password') {
+    if (
+        urlData.path === '/' || 
+        urlData.path === '/api/v1/admin/login' ||
+        request.headers['authorization'] === 'password' || 
+        request.headers['authorization'] === config.client
+    ) {
         // No checking for token
         // 1
         request.decoded = {
