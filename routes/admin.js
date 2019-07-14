@@ -3,7 +3,7 @@ const controller = require('../controller/admin');
 module.exports = [
     {
         method: 'POST',
-        url: '/api/v1/admin/loigin',
+        url: '/api/v1/admin/login',
         handler: controller.login
     }
 ]

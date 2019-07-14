@@ -6,5 +6,5 @@ exports.login = async (req, res) => {
     if (password == config.admin)
         return { success: true };
 
-    return res.code(500);s
+    return res.code(500);
 }

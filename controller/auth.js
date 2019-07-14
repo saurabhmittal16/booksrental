@@ -58,7 +58,7 @@ exports.finishProfile = async (req, res) => {
 
             await foundUser.save();
             return {
-                "sucess": true
+                "success": true
             }
         } else {
             console.log('No user found');
