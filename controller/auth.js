@@ -46,12 +46,14 @@ exports.auth = async (req, res) => {
 
 exports.finishProfile = async (req, res) => {
     const uid = req.decoded.user_id;
-    const { mobile } = req.body;
+    const { mobile, name, address } = req.body;
 
     try {
         const foundUser = await User.findOne({uid: uid});
         if (foundUser) {
-            foundUser.mobile = mobile;
+            foundUser.mobile = mobile ? mobile : foundUser.mobile;
+            foundUser.name = name ? name : foundUser.name;
+            foundUser.address = address ? address : foundUser.address;
             await foundUser.save();
             return {
                 "sucess": true

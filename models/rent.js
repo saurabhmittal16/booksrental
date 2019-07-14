@@ -27,6 +27,12 @@ const rentSchema = new mongoose.Schema({
         ref: 'Book'
     },
     
+    // confirmed, picked-up, delivered, returned
+    status: {
+        type: String,
+        default: "Confirmed"
+    },
+
     closed: {
         type: Boolean,
         default: false

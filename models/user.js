@@ -10,12 +10,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    address: {
-        address: String,
-        city: String,
-        state: String,
-        zip: String
-    }
+    address: String,
 }, {
     versionKey: false
 });
