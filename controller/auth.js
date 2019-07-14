@@ -51,13 +51,31 @@ exports.finishProfile = async (req, res) => {
     try {
         const foundUser = await User.findOne({uid: uid});
         if (foundUser) {
-            foundUser.mobile = mobile ? mobile : foundUser.mobile;
-            foundUser.name = name ? name : foundUser.name;
-            foundUser.address = address ? address : foundUser.address;
+            
+            if (!!mobile) foundUser.mobile = mobile;
+            if (!!name) foundUser.name = name; 
+            if (!!address) foundUser.address = address;
+
             await foundUser.save();
             return {
                 "sucess": true
             }
+        } else {
+            console.log('No user found');
+            return res.code(500);
+        }
+    } catch (err) {
+        console.log(err);
+        return res.code(500);
+    }
+}
+
+exports.getProfile = async (req, res) => {
+    const uid = req.decoded.user_id;
+    try {
+        const foundUser = await User.findOne({uid: uid}, { verified: 0, _id: 0 });
+        if (foundUser) {
+            return foundUser;
         } else {
             console.log('No user found');
             return res.code(500);

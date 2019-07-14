@@ -69,3 +69,17 @@ Authorization: password
 ### activity - lent
 GET http://localhost:8080/api/v1/activity/lent
 Authorization: password
+
+### profile
+GET http://localhost:8080/api/v1/profile
+Authorization: password
+
+### finish profile
+POST http://localhost:8080/api/v1/profile
+Authorization: password
+Content-Type: application/json
+
+{
+    "name": "Saurabh Mittal",
+    "mobile": "9090909090"
+}

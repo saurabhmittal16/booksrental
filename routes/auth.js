@@ -9,8 +9,13 @@ module.exports = [
     },
     {
         method: 'POST',
-        url: '/api/v1/auth/profile',
+        url: '/api/v1/profile',
         schema: schema.finishProfile,
         handler: controller.finishProfile,
+    },
+    {
+        method: 'GET',
+        url: '/api/v1/profile',
+        handler: controller.getProfile,
     }
 ]
