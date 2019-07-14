@@ -80,8 +80,7 @@ Authorization: password
 Content-Type: application/json
 
 {
-    "name": "Saurabh Mittal",
-    "mobile": "9090909090"
+    "name": "Saurabh Mittal"
 }
 
 ### admin
