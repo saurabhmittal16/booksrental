@@ -183,7 +183,8 @@ exports.confirmRequest = async (req, res) => {
                     end: foundRequest.end,
                     lenderInfo: foundRequest.lender,
                     lendeeInfo: details,
-                    closed: false
+                    closed: false,
+                    status: "Confirmed"
                 });
 
                 if (newRent) {

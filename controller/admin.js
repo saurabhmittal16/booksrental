@@ -21,7 +21,11 @@ exports.getRents = async (req, res) => {
 
     try {
         const data = await Rent
-            .find()
+            .find({
+                status: {
+                    $nin: [ "Delivered", "Returned" ]
+                }
+            })
             .populate({
                 path: 'listing',
                 select: 'name + isbn'
