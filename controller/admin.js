@@ -1,5 +1,6 @@
 const Rent = require('../models/rent');
 const User = require('../models/user');
+const Book = require('../models/book');
 const config = require('../config');
 
 exports.login = async (req, res) => {
@@ -71,6 +72,32 @@ exports.getUID = async (req, res) => {
     try {
         const user = await User.findOne({mobile: mobile});
         return user ? user.uid : null;
+    } catch (err) {
+        console.log(err);
+        return res.code(500);
+    }
+}
+
+exports.addBook = async (req, res) => {
+    delete req.body.searched;
+
+    try {
+        const createdBook = await Book.create({
+            ...req.body
+        });
+
+        if (createdBook) {
+            console.log("Listing added successfuly");
+            return {
+                success: true
+            }
+        } else {
+            console.log("Error");
+            return res.code(500).send({
+                message: "Book creation failed"
+            });
+        }
+
     } catch (err) {
         console.log(err);
         return res.code(500);

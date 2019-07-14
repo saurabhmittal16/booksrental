@@ -20,5 +20,10 @@ module.exports = [
         method: 'GET',
         url: '/api/v1/admin/mobile/:mobile',
         handler: controller.getUID
+    },
+    {
+        method: 'POST',
+        url: '/api/v1/admin/book',
+        handler: controller.addBook
     }
 ]
