@@ -1,4 +1,5 @@
 const Rent = require('../models/rent');
+const User = require('../models/user');
 const config = require('../config');
 
 exports.login = async (req, res) => {
@@ -17,7 +18,7 @@ exports.getRents = async (req, res) => {
     const start = parseInt(req.query.start, 10) || 0;
     
     // limit -> number of results to send
-    const limit = parseInt(req.query.limit, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
 
     try {
         const data = await Rent
@@ -59,6 +60,17 @@ exports.updateStatus = async (req, res) => {
         return {
             success: true
         };
+    } catch (err) {
+        console.log(err);
+        return res.code(500);
+    }
+}
+
+exports.getUID = async (req, res) => {
+    const mobile = req.params.mobile;
+    try {
+        const user = await User.findOne({mobile: mobile});
+        return user ? user.uid : null;
     } catch (err) {
         console.log(err);
         return res.code(500);

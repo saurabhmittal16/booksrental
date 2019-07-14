@@ -97,3 +97,7 @@ Content-Type: application/json
     "id": "5d11c934dcfb9d7ba8aa2fb3",
     "status": "Confirmed"
 }
+
+### get UID
+GET http://localhost:8080/api/v1/admin/mobile/9090909090
+Authorization: gf#0BP36u0l3fdMU2.JIdM94xwpbdwzU4ZQe6a3AN

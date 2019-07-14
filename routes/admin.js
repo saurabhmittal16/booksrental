@@ -15,5 +15,10 @@ module.exports = [
         method: 'POST',
         url: '/api/v1/admin/status',
         handler: controller.updateStatus
+    },
+    {
+        method: 'GET',
+        url: '/api/v1/admin/mobile/:mobile',
+        handler: controller.getUID
     }
 ]
